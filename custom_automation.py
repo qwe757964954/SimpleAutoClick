@@ -1,3 +1,4 @@
+import re
 import pyautogui
 import cv2
 import numpy
@@ -12,7 +13,7 @@ from threading import Thread
 
 # Custom Variables
 max_loop = 2
-click_interval = 1
+click_interval = 2
 loop_interval = 1
 
 # search and click image in the center
@@ -50,16 +51,19 @@ def main():
     loop = 0    
     time.sleep(1) 
     while loop < max_loop:
-        # search images in input_images folder
-        for file in glob.glob("./input_images/*.png"):
+        # Search and sort images in input_images folder
+        files = glob.glob("./setting/*.png")
+        sorted_files = sorted(files, key=lambda x: int(re.search(r"(\d+)", os.path.basename(x)).group()))
+        for file in sorted_files:
             print("File: " + file)
             ret = clickImage(file)
-            if (ret == -1):
+            if ret == -1:
                 loop = max_loop
                 break
             time.sleep(click_interval)
         loop += 1
-        time.sleep(loop_interval) 
+        time.sleep(loop_interval)
+    
     os._exit(0)    
 
 #interrupt thread
