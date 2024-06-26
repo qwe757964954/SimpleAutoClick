@@ -1,0 +1,2 @@
+# SimpleAutoClick
+SimpleAutoClick
