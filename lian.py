@@ -1,11 +1,9 @@
-import re
+import os
 import pyautogui
 import cv2
 import numpy as np
-import time
-import keyboard
-import os
 import logging
+import time
 from threading import Thread
 
 # Configure logging
@@ -15,38 +13,8 @@ logging.basicConfig(level=logging.INFO, format='%(asctime)s %(levelname)s:%(mess
 click_interval = 1  # Delay after clicking
 check_interval = 1  # Delay between checks
 restart_interval = 600  # Time to restart monitoring thread (in seconds)
-three_image = "./setting/zzc.png"
-sure_image = "./setting/2_sure.png"
-
-# search and click image in the center
-def clickImage2(image, threshold=0.5):
-
-    # grab windows print screen
-    screen_img = pyautogui.screenshot() 
-
-    screen_img_rgb = np.array(screen_img)
-    
-    # convert screen img to grayscale
-    screen_img_gray = cv2.cvtColor(screen_img_rgb, cv2.COLOR_BGR2GRAY) 
-    
-    # read image
-    template = cv2.imread(image,cv2.IMREAD_GRAYSCALE)
-    template.shape[::-1]
-
-    # search for matching image in screen
-    res = cv2.matchTemplate(screen_img_gray, template, cv2.TM_CCOEFF_NORMED)
-    min_val, max_val, min_loc, max_loc = cv2.minMaxLoc(res)    
-    
-    # no image is found 
-    if max_val < threshold:
-        return -1;
-    
-    # move mouse to center of image    
-    pyautogui.moveTo(max_loc[0]+template.shape[1]/2, max_loc[1]+template.shape[0]/2, 0.5, pyautogui.easeOutQuad)    
-        
-    # left click   
-    pyautogui.click()     
-    return 0;   
+three_image = "./perfect/three.jpg"
+sure_image = "./perfect/sure.jpg"
 
 def clickImage(image, threshold=0.5):
     """
@@ -91,25 +59,15 @@ def clickImage(image, threshold=0.5):
 def monitorImages():
     try:
         while True:
-            ret = clickImage2(three_image)
+            ret = clickImage(three_image)
             if ret == 0:
                 logging.info(f"{three_image} detected, clicking {sure_image}.")
-                time.sleep(3)
-                clickImage2(sure_image)
+                clickImage(sure_image)
                 time.sleep(click_interval)  # Delay after action to avoid rapid triggering
             time.sleep(check_interval)  # Delay between checks to reduce CPU usage
     except Exception as e:
         logging.error(f"Exiting monitor due to an error: {e}")
         os._exit(0)
-
-def key_listener():
-    try:
-        while True:
-            if keyboard.read_key() == "esc":
-                logging.info("Interrupted by user.")
-                os._exit(0)
-    except:
-        logging.error("Key listener encountered an error.")
 
 def restart_monitor():
     global monitor_thread
@@ -125,16 +83,8 @@ try:
     logging.info("Press 'Escape' to quit this application anytime")
 
     monitor_thread = Thread(target=monitorImages)
-    key_listener_thread = Thread(target=key_listener)
-    restart_thread = Thread(target=restart_monitor)
-
     monitor_thread.start()
-    key_listener_thread.start()
-    restart_thread.start()
-    
     monitor_thread.join()
-    key_listener_thread.join()
-    restart_thread.join()
 
 except Exception as e:
     logging.error(f"Exiting due to an error: {e}")
