@@ -15,8 +15,38 @@ logging.basicConfig(level=logging.INFO, format='%(asctime)s %(levelname)s:%(mess
 click_interval = 1  # Delay after clicking
 check_interval = 1  # Delay between checks
 restart_interval = 600  # Time to restart monitoring thread (in seconds)
-three_image = "./perfect/three.jpg"
-sure_image = "./perfect/sure.jpg"
+three_image = "./perfect/three.png"
+sure_image = "./perfect/sure.png"
+
+# search and click image in the center
+def clickImage2(image, threshold=0.5):
+
+    # grab windows print screen
+    screen_img = pyautogui.screenshot() 
+
+    screen_img_rgb = np.array(screen_img)
+    
+    # convert screen img to grayscale
+    screen_img_gray = cv2.cvtColor(screen_img_rgb, cv2.COLOR_BGR2GRAY) 
+    
+    # read image
+    template = cv2.imread(image,cv2.IMREAD_GRAYSCALE)
+    template.shape[::-1]
+
+    # search for matching image in screen
+    res = cv2.matchTemplate(screen_img_gray, template, cv2.TM_CCOEFF_NORMED)
+    min_val, max_val, min_loc, max_loc = cv2.minMaxLoc(res)    
+    
+    # no image is found 
+    if max_val < threshold:
+        return -1;
+    
+    # move mouse to center of image    
+    pyautogui.moveTo(max_loc[0]+template.shape[1]/2, max_loc[1]+template.shape[0]/2, 0.5, pyautogui.easeOutQuad)    
+        
+    # left click   
+    pyautogui.click()     
+    return 0;   
 
 def clickImage(image, threshold=0.5):
     """
@@ -40,6 +70,7 @@ def clickImage(image, threshold=0.5):
         
         # If no image is found, return -1
         if max_val < threshold:
+            logging.info(f"No match found for {image}, max_val: {max_val}")
             return -1
         
         # Calculate the center of the matched area
@@ -60,10 +91,11 @@ def clickImage(image, threshold=0.5):
 def monitorImages():
     try:
         while True:
-            ret = clickImage(three_image)
+            ret = clickImage2(three_image)
             if ret == 0:
                 logging.info(f"{three_image} detected, clicking {sure_image}.")
-                clickImage(sure_image)
+                time.sleep(3)
+                clickImage2(sure_image)
                 time.sleep(click_interval)  # Delay after action to avoid rapid triggering
             time.sleep(check_interval)  # Delay between checks to reduce CPU usage
     except Exception as e:
