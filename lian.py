@@ -1,9 +1,8 @@
-import os
 import pyautogui
 import cv2
 import numpy as np
-import logging
 import time
+import logging
 from threading import Thread
 
 # Configure logging
@@ -13,8 +12,8 @@ logging.basicConfig(level=logging.INFO, format='%(asctime)s %(levelname)s:%(mess
 click_interval = 1  # Delay after clicking
 check_interval = 1  # Delay between checks
 restart_interval = 600  # Time to restart monitoring thread (in seconds)
-three_image = "./perfect/three.jpg"
-sure_image = "./perfect/sure.jpg"
+three_image = "./setting/zzc.png"
+sure_image = "./setting/2_sure.png"
 
 def clickImage(image, threshold=0.5):
     """
@@ -46,7 +45,7 @@ def clickImage(image, threshold=0.5):
         center_y = max_loc[1] + h / 2
         
         # Move the mouse to the center of the matched image
-        pyautogui.moveTo(center_x, center_y, duration=0.2, tween=pyautogui.easeOutQuad)
+        pyautogui.moveTo(center_x, center_y, duration=0.5, tween=pyautogui.easeOutQuad)
         
         # Click at the center
         pyautogui.click()
