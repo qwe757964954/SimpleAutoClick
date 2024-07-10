@@ -16,7 +16,7 @@ restart_interval = 600  # Time to restart monitoring thread (in seconds)
 three_image = "./setting/2_sure.png"
 sure_image = "./setting/zzc.png"
 
-def clickImage(image, threshold=0.6):
+def clickImage(image, threshold=0.7):
     """
     Search for the image on the screen and click on it.
     """
