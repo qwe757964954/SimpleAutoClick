@@ -89,14 +89,18 @@ def activityClicker():
     global running
     try:
         while running:
-            clickImage(activity_image)
-            time.sleep(click_interval)
-            ret = clickImage(shangfa)
-            while ret != 0 and running:
-                clickAndDragImage(scroll_image, threshold=0.7, drag_distance=(0, -200), drag_duration=0.5)
+            ret = clickImage(activity_image)
+            if ret == 0:
+                logging.info(f"{activity_image} detected, clicking {close_activity}.")
+                time.sleep(click_interval)
                 ret = clickImage(shangfa)
-            time.sleep(click_interval)
-            ret = clickImage(goActivity)
+                while ret != 0 and running:
+                    clickAndDragImage(scroll_image, threshold=0.7, drag_distance=(0, -200), drag_duration=0.5)
+                    ret = clickImage(shangfa)
+                time.sleep(click_interval)
+                ret = clickImage(goActivity)
+                time.sleep(click_interval)
+                ret = clickImage(close_activity)
             time.sleep(activity_interval)
     except Exception as e:
         logging.error(f"Exiting activity clicker due to an error: {e}")
