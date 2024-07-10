@@ -94,10 +94,10 @@ def activityClicker():
             if ret == 0:
                 logging.info(f"{activity_image} detected, clicking {close_activity}.")
                 time.sleep(click_interval)
-                # ret = clickImage(shangfa)
-                # while ret != 0 and running:
-                clickAndDragImage(scroll_image, threshold=0.7, drag_distance=(0, -200), drag_duration=0.5)
                 ret = clickImage(shangfa)
+                while ret != 0 and running:
+                    clickAndDragImage(scroll_image, threshold=0.7, drag_distance=(0, -200), drag_duration=0.5)
+                    ret = clickImage(shangfa)
                 time.sleep(click_interval)
                 ret = clickImage(goActivity)
                 time.sleep(click_interval)
