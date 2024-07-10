@@ -93,10 +93,10 @@ def activityClicker():
             if ret == 0:
                 logging.info(f"{activity_image} detected, clicking {close_activity}.")
                 time.sleep(click_interval)
+                # ret = clickImage(shangfa)
+                # while ret != 0 and running:
+                clickAndDragImage(scroll_image, threshold=0.7, drag_distance=(0, -200), drag_duration=0.5)
                 ret = clickImage(shangfa)
-                while ret != 0 and running:
-                    clickAndDragImage(scroll_image, threshold=0.7, drag_distance=(0, -200), drag_duration=0.5)
-                    ret = clickImage(shangfa)
                 time.sleep(click_interval)
                 ret = clickImage(goActivity)
                 time.sleep(click_interval)
@@ -112,9 +112,9 @@ def restart_monitor():
         time.sleep(restart_interval)
         if not monitor_thread.is_alive():
             logging.info("Restarting monitor thread.")
-            monitor_thread.join()
-            monitor_thread = Thread(target=monitorImages)
-            monitor_thread.start()
+            # monitor_thread.join()
+            # monitor_thread = Thread(target=monitorImages)
+            # monitor_thread.start()
         if not activity_thread.is_alive():
             logging.info("Restarting activity thread.")
             activity_thread.join()
