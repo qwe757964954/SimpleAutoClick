@@ -15,6 +15,7 @@ click_interval = 1  # Delay after clicking
 check_interval = 1  # Delay between checks
 restart_interval = 600  # Time to restart monitoring thread (in seconds)
 activity_interval = 300  # Interval to click activity_image (in seconds)
+shangfa_interval = 60  # Interval to click activity_image (in seconds)
 three_image = "./setting/sure.png"
 sure_image = "./setting/content.png"
 activity_image = "./setting/activity.png"
@@ -80,7 +81,7 @@ def monitorImages():
                 logging.info(f"{three_image} detected, clicking {sure_image}.")
                 clickImage(sure_image)
                 time.sleep(click_interval)
-            time.sleep(check_interval)
+            time.sleep(shangfa_interval)
     except Exception as e:
         logging.error(f"Exiting monitor due to an error: {e}")
         os._exit(0)
