@@ -130,7 +130,7 @@ def on_press(key):
 
 try:
     logging.info("Press 'Escape' to quit this application anytime")
-
+    time.sleep(5) 
     monitor_thread = Thread(target=monitorImages)
     activity_thread = Thread(target=activityClicker)
     monitor_thread.start()
