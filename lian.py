@@ -1,3 +1,4 @@
+import os
 import pyautogui
 import cv2
 import numpy as np
@@ -12,10 +13,10 @@ logging.basicConfig(level=logging.INFO, format='%(asctime)s %(levelname)s:%(mess
 click_interval = 1  # Delay after clicking
 check_interval = 1  # Delay between checks
 restart_interval = 600  # Time to restart monitoring thread (in seconds)
-three_image = "./setting/zzc.png"
-sure_image = "./setting/2_sure.png"
+three_image = "./setting/2_sure.png"
+sure_image = "./setting/zzc.png"
 
-def clickImage(image, threshold=0.5):
+def clickImage(image, threshold=0.85):
     """
     Search for the image on the screen and click on it.
     """
